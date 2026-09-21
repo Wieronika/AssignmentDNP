@@ -1,8 +1,9 @@
 ﻿using Entities;
 using RepositoryContracts;
+
 namespace InMemoryRepositories;
 
-public class UserInMemoryRepository
+public class UserInMemoryRepository : IUserRepository
 {
     private readonly List<User> users = [];
 

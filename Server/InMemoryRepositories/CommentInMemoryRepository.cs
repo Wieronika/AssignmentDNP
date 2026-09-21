@@ -2,60 +2,60 @@
 using RepositoryContracts;
 namespace InMemoryRepositories;
 
-public class CommentInMemoryRepository
+public class CommentInMemoryRepository : ICommentRepository
 {
     private readonly List<Comment> comments = [];
     
     public CommentInMemoryRepository()
     {
-        // Comments for Post 1: "What is your favorite coffee?"
+        // Comments for Post 1
         _ = AddAsync(new Comment(
             "You should definitely try a flat white!",
-            1,
-            2)).Result;
+            2,
+            1)).Result;
 
         _ = AddAsync(new Comment(
             "I really like iced lattes.",
-            1,
-            3)).Result;
+            3,
+            1)).Result;
 
-        // Comments for Post 2: "Best milk for a latte?"
+        // Comments for Post 2
         _ = AddAsync(new Comment(
             "Oat milk is my favorite, especially with darker coffee.",
-            2,
-            1)).Result;
+            1,
+            2)).Result;
 
         _ = AddAsync(new Comment(
             "I still prefer regular milk in my latte.",
-            2,
-            3)).Result;
+            3,
+            2)).Result;
 
-        // Comments for Post 3: "Coffee for studying"
+        // Comments for Post 3
         _ = AddAsync(new Comment(
             "Double espresso always gets me through long study sessions!",
-            3,
-            1)).Result;
+            1,
+            3)).Result;
 
         _ = AddAsync(new Comment(
             "Cold brew is also a good option and tastes less bitter.",
-            3,
-            2)).Result;
+            2,
+            3)).Result;
 
         _ = AddAsync(new Comment(
             "I usually go for an Americano when I need to study.",
             3,
             3)).Result;
 
-        // Comments for Post 4: "Espresso vs Americano"
+        // Comments for Post 4
         _ = AddAsync(new Comment(
             "Espresso for me! Small but strong.",
-            4,
-            3)).Result;
+            3,
+            4)).Result;
 
         _ = AddAsync(new Comment(
             "Americano, I like having something to sip for longer.",
-            4,
-            2)).Result;
+            2,
+            4)).Result;
     }
 
     public Task<Comment> AddAsync(Comment comment)
