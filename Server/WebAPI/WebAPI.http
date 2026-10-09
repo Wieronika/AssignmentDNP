@@ -1,6 +1,39 @@
 @WebAPI_HostAddress = http://localhost:5120
 
+### Test WeatherForecast
 GET {{WebAPI_HostAddress}}/weatherforecast/
 Accept: application/json
 
-###
+### Create a new user
+POST {{WebAPI_HostAddress}}/users
+Content-Type: application/json
+
+{
+  "userName": "Veronica",
+  "password": "qwerty123"
+}
+
+### Get all users
+GET {{WebAPI_HostAddress}}/users
+Accept: application/json
+
+### Update user
+PATCH {{WebAPI_HostAddress}}/users/1
+Content-Type: application/json
+
+{
+  "userName": "VeronicaCheckUpd",
+  "password": "TEST123"
+}
+
+### Get user by ID
+GET {{WebAPI_HostAddress}}/users/1
+Accept: application/json
+
+### Delete user
+DELETE {{WebAPI_HostAddress}}/users/1
+
+### Get a user that does not exist
+GET {{WebAPI_HostAddress}}/users/9999
+Accept: application/json
+
