@@ -146,4 +146,169 @@ GET {{WebAPI_HostAddress}}/comments/9999
 Accept: application/json
 
 
+### Get users filtered by username
+GET {{WebAPI_HostAddress}}/users?userName=ver
+Accept: application/json
+
+### Get all users without filtering
+GET {{WebAPI_HostAddress}}/users
+Accept: application/json
+
+
+
+### Filter posts by title
+GET {{WebAPI_HostAddress}}/posts?title=coffee
+Accept: application/json
+
+### Filter posts by author ID
+GET {{WebAPI_HostAddress}}/posts?userId=1
+Accept: application/json
+
+### Filter posts by both title and author
+GET {{WebAPI_HostAddress}}/posts?title=coffee&userId=1
+Accept: application/json
+
+### Get all posts
+GET {{WebAPI_HostAddress}}/posts
+Accept: application/json
+
+
+
+
+
+### Get all comments
+GET {{WebAPI_HostAddress}}/comments
+Accept: application/json
+
+### Filter comments by user ID
+GET {{WebAPI_HostAddress}}/comments?userId=1
+Accept: application/json
+
+### Filter comments by post ID
+GET {{WebAPI_HostAddress}}/comments?postId=1
+Accept: application/json
+
+### Filter comments by both user and post
+GET {{WebAPI_HostAddress}}/comments?userId=1&postId=1
+Accept: application/json
+
+### Test nonmatching comments
+GET {{WebAPI_HostAddress}}/comments?userId=9999
+Accept: application/json
+
+
+
+### Create another user
+POST {{WebAPI_HostAddress}}/users
+Content-Type: application/json
+
+{
+  "userName": "Alex",
+  "password": "asdfghjm123"
+}
+
+
+
+### Post about programming by Veronica
+POST {{WebAPI_HostAddress}}/posts
+Content-Type: application/json
+
+{
+  "title": "Learning C#",
+  "body": "Does anyone have tips for learning ASP.NET Core?",
+  "userId": 1
+}
+
+### Post about coffee by Alex
+POST {{WebAPI_HostAddress}}/posts
+Content-Type: application/json
+
+{
+  "title": "Best coffee in Denmark",
+  "body": "Which coffee shops would you recommend?",
+  "userId": 4
+}
+
+### Post about university by Alex
+POST {{WebAPI_HostAddress}}/posts
+Content-Type: application/json
+
+{
+  "title": "University assignments",
+  "body": "How do you organise your study schedule?",
+  "userId": 4
+}
+
+
+
+
+
+### Find coffee posts
+GET {{WebAPI_HostAddress}}/posts?title=coffee
+
+### Find posts by Veronica
+GET {{WebAPI_HostAddress}}/posts?userId=1
+
+### Find posts by Alex
+GET {{WebAPI_HostAddress}}/posts?userId=4
+
+### Find Alex's coffee posts
+GET {{WebAPI_HostAddress}}/posts?title=coffee&userId=4
+
+### Search for a nonexistent title
+GET {{WebAPI_HostAddress}}/posts?title=dogs
+
+
+
+
+
+### Veronica comments on Alex's coffee post
+POST {{WebAPI_HostAddress}}/posts/6/comments
+Content-Type: application/json
+
+{
+  "body": "I really like cappuccino!",
+  "userId": 1
+}
+
+### Alex comments on the C# post
+POST {{WebAPI_HostAddress}}/posts/7/comments
+Content-Type: application/json
+
+{
+  "body": "I recommend practising controllers and REST APIs.",
+  "userId": 4
+}
+
+### Alex comments on his university post
+POST {{WebAPI_HostAddress}}/posts/7/comments
+Content-Type: application/json
+
+{
+  "body": "I usually plan my assignments every Sunday.",
+  "userId": 4
+}
+
+
+
+
+### Comments by Veronica
+GET {{WebAPI_HostAddress}}/comments?userId=1
+
+### Comments by Alex
+GET {{WebAPI_HostAddress}}/comments?userId=4
+
+### Comments on Alex's coffee post
+GET {{WebAPI_HostAddress}}/comments?postId=6
+
+### Alex's comments on the coffee post
+GET {{WebAPI_HostAddress}}/comments?userId=4&postId=6
+
+### Comments with nonexistent user
+GET {{WebAPI_HostAddress}}/comments?userId=12345
+
+
+
+
+
 

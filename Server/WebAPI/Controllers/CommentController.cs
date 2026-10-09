@@ -159,4 +159,43 @@ public class CommentsController : ControllerBase
             return Results.NotFound($"Comment with ID {id} not found.");
         }
     }
+    
+    
+    [HttpGet]
+    public Task<IResult> GetComments(
+        [FromQuery] int? userId,
+        [FromQuery] int? postId)
+    {
+        IQueryable<Comment> comments = commentRepo.GetMany();
+
+        // by user ID
+        if (userId != null)
+        {
+            comments = comments.Where(c => c.UserId == userId);
+        }
+
+        // by post ID
+        if (postId != null)
+        {
+            comments = comments.Where(c => c.PostId == postId);
+        }
+
+        List<User> users = userRepo.GetMany().ToList();
+
+        List<CommentDto> dtos = comments.Select(comment =>
+            new CommentDto
+            {
+                Id = comment.Id,
+                Body = comment.Body,
+                UserId = comment.UserId,
+                PostId = comment.PostId,
+                UserName = users
+                    .Where(u => u.Id == comment.UserId)
+                    .Select(u => u.UserName)
+                    .FirstOrDefault() ?? ""
+            }).ToList();
+
+        return Task.FromResult<IResult>(Results.Ok(dtos));
+    }
+
 }

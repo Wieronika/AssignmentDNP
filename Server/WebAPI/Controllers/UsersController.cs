@@ -38,20 +38,29 @@ public class UsersController : ControllerBase
 
     }
 
-    [HttpGet]
-    public Task<IResult> GetUsers()
-    {
-        List<UserDto> users = userRepo.GetMany()
-            .Select(user => new UserDto
-            {
-                Id = user.Id,
-                UserName = user.UserName
-            })
-            .ToList();
 
-        return Task.FromResult<IResult>(Results.Ok(users));
+    [HttpGet]
+    public Task<IResult> GetUsers([FromQuery] string? userName)
+    {
+        IQueryable<User> users = userRepo.GetMany();
+
+        if (!string.IsNullOrWhiteSpace(userName))
+        {
+            users = users.Where(u =>
+                u.UserName.Contains(
+                    userName,
+                    StringComparison.OrdinalIgnoreCase));
+        }
+
+        List<UserDto> dtos = users.Select(user => new UserDto
+        {
+            Id = user.Id,
+            UserName = user.UserName
+        }).ToList();
+
+        return Task.FromResult<IResult>(Results.Ok(dtos));
     }
-    
+
     //Here i return userDto and not just User, so the password isn't included in the response
     [HttpPost]
     public async Task<IResult> CreateUser([FromBody] CreateUserDto request)

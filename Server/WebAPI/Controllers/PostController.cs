@@ -46,14 +46,27 @@ public class PostsController : ControllerBase
         }
     }
     
+
     [HttpGet]
-    public Task<IResult> GetPosts([FromQuery] int? userId)
+    public Task<IResult> GetPosts(
+        [FromQuery] int? userId,
+        [FromQuery] string? title)
     {
         IQueryable<Post> posts = postRepo.GetMany();
 
+        //here I filter posts by author ID
         if (userId != null)
         {
             posts = posts.Where(p => p.UserId == userId);
+        }
+
+        //and here I filter posts by title
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            posts = posts.Where(p =>
+                p.Title.Contains(
+                    title,
+                    StringComparison.OrdinalIgnoreCase));
         }
 
         List<PostDto> dtos = posts.Select(post => new PostDto
@@ -70,6 +83,7 @@ public class PostsController : ControllerBase
 
         return Task.FromResult<IResult>(Results.Ok(dtos));
     }
+
     
     [HttpPost]
     public async Task<IResult> CreatePost(
