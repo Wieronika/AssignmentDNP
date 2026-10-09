@@ -37,3 +37,51 @@ DELETE {{WebAPI_HostAddress}}/users/1
 GET {{WebAPI_HostAddress}}/users/9999
 Accept: application/json
 
+### Create a user/ author of the post
+POST {{WebAPI_HostAddress}}/users
+Content-Type: application/json
+
+{
+  "userName": "Veronica",
+  "password": "qwerty123"
+}
+
+###Create a post
+POST {{WebAPI_HostAddress}}/posts
+Content-Type: application/json
+
+{
+  "title": "My first post",
+  "body": "This is my first post.",
+  "userId": 1
+}
+
+###  Get all posts
+GET {{WebAPI_HostAddress}}/posts
+Accept: application/json
+
+### Get post by ID
+GET {{WebAPI_HostAddress}}/posts/1
+Accept: application/json
+
+###  Get posts by user
+GET {{WebAPI_HostAddress}}/posts?userId=1
+Accept: application/json
+
+### Update post
+PATCH {{WebAPI_HostAddress}}/posts/1
+Content-Type: application/json
+
+{
+  "title": "My updated post",
+  "body": "Here is my updated Post"
+}
+
+###  Delete post
+DELETE {{WebAPI_HostAddress}}/posts/1
+
+### Test missing post
+GET {{WebAPI_HostAddress}}/posts/9999
+Accept: application/json
+
+
