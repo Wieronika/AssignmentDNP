@@ -1,12 +1,14 @@
 ﻿namespace Entities;
 
+using System.Text.Json.Serialization;
 public class Post
 {
     public int Id {get; set;}
     public string Title {get; set;}
     public string Body {get; set;}
     public int UserId {get;} //we don't set, since we just recieve data about 'who wrote post'
-
+    
+    [JsonConstructor]
     public Post(string title, string body, int userId)
     {
         Title = title;

@@ -37,6 +37,10 @@ DELETE {{WebAPI_HostAddress}}/users/1
 GET {{WebAPI_HostAddress}}/users/9999
 Accept: application/json
 
+
+
+
+
 ### Create a user/ author of the post
 POST {{WebAPI_HostAddress}}/users
 Content-Type: application/json
@@ -83,5 +87,63 @@ DELETE {{WebAPI_HostAddress}}/posts/1
 ### Test missing post
 GET {{WebAPI_HostAddress}}/posts/9999
 Accept: application/json
+
+
+
+
+
+
+
+### Create a user
+POST {{WebAPI_HostAddress}}/users
+Content-Type: application/json
+
+{
+  "userName": "Veronica",
+  "password": "qwerty123"
+}
+
+###  Create a post
+POST {{WebAPI_HostAddress}}/posts
+Content-Type: application/json
+
+{
+  "title": "Coffee discussion",
+  "body": "What is your favourite coffee?",
+  "userId": 1
+}
+
+### Create a comment
+POST {{WebAPI_HostAddress}}/posts/1/comments
+Content-Type: application/json
+
+{
+  "body": "I really like cappuccino!",
+  "userId": 1
+}
+
+### Get comments for a post
+GET {{WebAPI_HostAddress}}/posts/1/comments
+Accept: application/json
+
+###  Get comment by ID
+GET {{WebAPI_HostAddress}}/comments/1
+Accept: application/json
+
+### Update a comment
+PATCH {{WebAPI_HostAddress}}/comments/1
+Content-Type: application/json
+
+{
+  "body": "Actually, my favourite is iced latte!"
+}
+
+### Delete a comment
+DELETE {{WebAPI_HostAddress}}/comments/1
+
+### Test missing comment
+GET {{WebAPI_HostAddress}}/comments/9999
+Accept: application/json
+
 
 
