@@ -308,6 +308,8 @@ GET {{WebAPI_HostAddress}}/comments?userId=4&postId=6
 GET {{WebAPI_HostAddress}}/comments?userId=12345
 
 
+### Test global exception handler
+GET {{WebAPI_HostAddress}}/test-error
 
 
 

@@ -1,7 +1,10 @@
 using FileRepositories;
 using RepositoryContracts;
+using WebAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddTransient<
+    GlobalExceptionHandlerMiddleware>();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -15,6 +18,7 @@ builder.Services.AddScoped<IUserRepository, UserFileRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentFileRepository>();
 
 var app = builder.Build();
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.MapControllers();
 
