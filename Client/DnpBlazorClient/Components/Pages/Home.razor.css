@@ -1,0 +1,264 @@
+﻿
+.home-container {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 30px 10px;
+  font-family: 'Manrope', Arial, sans-serif;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 30px;
+  background: #392651;
+  border-radius: 22px;
+  padding: 45px;
+  margin-bottom: 45px;
+}
+
+.hero-content {
+  min-width: 0;
+}
+
+.hero-label {
+  color: #ff9a45;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+}
+
+.hero h1 {
+  color: #ffffff;
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.hero-description {
+  color: #e1d3ee;
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.explore-button,
+.create-button {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 9px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.explore-button {
+  background: #ff9a45;
+  color: #211526;
+}
+
+.create-button {
+  border: 1px solid #bda4d5;
+  color: #ffffff;
+}
+
+.explore-button:hover {
+  background: #ffb16f;
+  color: #211526;
+}
+
+.create-button:hover {
+  background: #51366b;
+  color: #ffffff;
+}
+
+.hero-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.section-heading {
+  color: #292039;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 24px;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.feature-card {
+  display: block;
+  padding: 25px;
+  background: #21182e;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.feature-card:hover {
+  background: #392651;
+  transform: translateY(-4px);
+}
+
+.feature-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 18px;
+}
+
+.feature-card h3 {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.feature-card p {
+  color: #c7b7d8;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .home-container {
+    padding: 15px 5px;
+  }
+
+  .hero {
+    padding: 28px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .join-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    background: #21182e;
+    border-radius: 18px;
+    padding: 30px 38px;
+    margin-bottom: 45px;
+  }
+
+  .join-content {
+    flex: 1;
+  }
+
+  .join-label {
+    color: #ff9a45;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  .join-banner h2 {
+    color: white;
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+
+  .join-banner .join-content > p:last-child {
+    color: #d8cbe5;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 0;
+  }
+
+  .join-button {
+    display: inline-block;
+    background: #ff9a45;
+    color: #211526;
+    padding: 13px 22px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 800;
+    white-space: nowrap;
+    transition: 0.2s;
+  }
+
+  .join-button:hover {
+    background: #ffb16f;
+    color: #211526;
+  }
+
+  .welcome-message {
+    background: #f3edf9;
+    border-left: 4px solid #ff9a45;
+    border-radius: 12px;
+    padding: 24px 30px;
+    margin-bottom: 45px;
+  }
+
+  .welcome-message h2 {
+    color: #392651;
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  .welcome-message p {
+    color: #655572;
+    margin-bottom: 10px;
+  }
+
+  .welcome-message a {
+    color: #b65d18;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .welcome-message a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    .join-banner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 26px;
+    }
+
+    .join-button {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+}

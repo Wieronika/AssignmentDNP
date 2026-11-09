@@ -1,0 +1,164 @@
+﻿
+/* Create User page */
+
+.create-user-page {
+  max-width: 620px;
+  margin: 45px auto;
+  padding: 0 20px;
+  font-family: 'Manrope', Arial, sans-serif;
+}
+
+
+
+/* Page heading */
+
+.create-user-heading {
+  margin-bottom: 35px;
+}
+
+.page-label {
+  color: #b77a38;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.create-user-heading h1 {
+  color: #21182e;
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+
+.create-user-heading > p:last-child {
+  color: #756c7d;
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+
+
+/* Registration card */
+
+.create-user-card {
+  background: #ffffff;
+  border: 1px solid #e7e1eb;
+  border-radius: 18px;
+  padding: 38px;
+  box-shadow: 0 12px 40px rgba(33, 24, 46, 0.05);
+}
+
+
+
+/* Input fields */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 26px;
+}
+
+.form-group label {
+  color: #392651;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.form-group input {
+  width: 100%;
+  background: #faf9fb;
+  border: 1px solid #ded8e3;
+  border-radius: 9px;
+  padding: 15px 17px;
+  color: #21182e;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  border-color: #392651;
+  box-shadow: 0 0 0 3px rgba(57, 38, 81, 0.09);
+}
+
+.form-group input::placeholder {
+  color: #aaa1ae;
+}
+
+
+
+/* Create account button */
+
+.create-account-button {
+  width: 100%;
+  background: #21182e;
+  color: #ffffff;
+  border: none;
+  border-radius: 9px;
+  padding: 15px 25px;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 5px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.create-account-button:hover {
+  background: #392651;
+  transform: translateY(-2px);
+}
+
+
+
+/* Login link */
+
+.login-prompt {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 23px;
+  border-top: 1px solid #eee8f1;
+}
+
+.login-prompt p {
+  color: #756c7d;
+  font-size: 13px;
+  margin: 0;
+}
+
+.login-prompt a {
+  color: #392651;
+  font-weight: 800;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.login-prompt a:hover {
+  color: #b77a38;
+}
+
+
+
+/* Mobile layout */
+
+@media (max-width: 600px) {
+  .create-user-page {
+    margin: 25px auto;
+    padding: 0 10px;
+  }
+
+  .create-user-heading h1 {
+    font-size: 29px;
+  }
+
+  .create-user-card {
+    padding: 25px;
+  }
+}

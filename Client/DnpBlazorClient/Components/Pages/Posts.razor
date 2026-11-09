@@ -1,0 +1,59 @@
+﻿@page "/posts"
+@using ApiContracts
+@using DnpBlazorClient.Services
+@inject IPostService PostService
+
+<PageTitle>Explore Posts - Fora</PageTitle>
+
+<h3>Explore Posts</h3>
+
+<p>Discover conversations and find something interesting.</p>
+
+<div class="mb-4">
+    <input class="form-control"
+           type="text"
+           placeholder="Search posts by title..."
+           @bind="searchText"
+           @bind:event="oninput" />
+</div>
+
+@if (posts == null)
+{
+    <p>Loading posts...</p>
+}
+else if (!FilteredPosts.Any())
+{
+    <p>No posts found matching your search.</p>
+}
+else
+{
+    @foreach (PostDto post in FilteredPosts)
+    {
+        <div class="post-card">
+            <h4>
+                <a href="@($"/posts/{post.Id}")">@post.Title</a>
+            </h4>
+
+            <p>@post.Body</p>
+
+            <p class="post-author">Author: @post.UserName</p>
+        </div>
+    }
+}
+
+@code {
+    private IEnumerable<PostDto>? posts;
+
+    private string searchText = "";
+
+    private IEnumerable<PostDto> FilteredPosts =>
+        posts?.Where(post =>
+            string.IsNullOrWhiteSpace(searchText) ||
+            (post.Title?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false))
+        ?? Enumerable.Empty<PostDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        posts = await PostService.GetPostsAsync();
+    }
+}

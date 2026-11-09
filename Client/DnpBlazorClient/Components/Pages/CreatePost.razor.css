@@ -1,0 +1,147 @@
+﻿
+.create-post-page {
+  max-width: 850px;
+  margin: 45px auto;
+  padding: 0 20px;
+  font-family: 'Manrope', Arial, sans-serif;
+}
+
+.create-post-heading {
+  margin-bottom: 35px;
+}
+
+.page-label {
+  color: #b77a38;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.create-post-heading h1 {
+  color: #21182e;
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin-bottom: 12px;
+}
+
+.create-post-heading > p:last-child {
+  color: #756c7d;
+  font-size: 15px;
+}
+
+.create-post-card {
+  background: #ffffff;
+  border: 1px solid #e7e1eb;
+  border-radius: 18px;
+  padding: 38px;
+  box-shadow: 0 12px 40px rgba(33, 24, 46, 0.05);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.form-group label {
+  color: #392651;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background: #faf9fb;
+  border: 1px solid #ded8e3;
+  border-radius: 9px;
+  padding: 15px 17px;
+  color: #21182e;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 180px;
+  line-height: 1.7;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #392651;
+  box-shadow: 0 0 0 3px rgba(57, 38, 81, 0.09);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #aaa1ae;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.cancel-button {
+  color: #756c7d;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 13px 20px;
+}
+
+.cancel-button:hover {
+  color: #21182e;
+}
+
+.publish-button {
+  background: #21182e;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.publish-button:hover {
+  background: #392651;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .create-post-page {
+    margin: 25px auto;
+    padding: 0 10px;
+  }
+
+  .create-post-heading h1 {
+    font-size: 29px;
+  }
+
+  .create-post-card {
+    padding: 25px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .publish-button,
+  .cancel-button {
+    text-align: center;
+  }
+}

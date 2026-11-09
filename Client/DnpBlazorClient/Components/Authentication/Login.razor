@@ -1,0 +1,114 @@
+﻿
+@page "/login"
+@using DnpBlazorClient.Auth
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager NavMgr
+
+<PageTitle>Login - Fora</PageTitle>
+
+<div class="login-page">
+
+    <AuthorizeView>
+        <NotAuthorized>
+
+            <div class="login-heading">
+                <p class="page-label">FORA / WELCOME BACK</p>
+                <h1>Good to have you back.</h1>
+                <p>Your conversations are waiting for you.</p>
+            </div>
+
+            <div class="login-card">
+
+                <div class="login-form">
+
+                    <div class="form-group">
+                        <label for="login-username">USERNAME</label>
+
+                        <input id="login-username"
+                               type="text"
+                               @bind="userName"
+                               class="form-control"
+                               placeholder="Enter your username"
+                               autocomplete="username" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password">PASSWORD</label>
+
+                        <input id="login-password"
+                               type="password"
+                               @bind="password"
+                               class="form-control"
+                               placeholder="Enter your password"
+                               autocomplete="current-password" />
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(errorLabel))
+                    {
+                        <p class="login-error">@errorLabel</p>
+                    }
+
+                    <button class="login-button"
+                            @onclick="LoginAsync">
+                        Log in
+                    </button>
+
+                </div>
+
+                <div class="register-prompt">
+                    <p>
+                        New to Fora?
+                        <a href="/create-user">Create an account</a>
+                    </p>
+                </div>
+
+            </div>
+
+        </NotAuthorized>
+
+        <Authorized>
+
+            <div class="login-heading">
+                <p class="page-label">FORA / YOUR ACCOUNT</p>
+                <h1>Welcome back.</h1>
+                <p>You're already part of the conversation.</p>
+            </div>
+
+            <div class="login-card logged-in-card">
+                <div class="welcome-icon">
+                    <span class="bi bi-check-circle-fill"></span>
+                </div>
+
+                <h2>Hello, @context.User.Identity?.Name!</h2>
+                <p>You are already logged in to Fora.</p>
+
+                <a href="/" class="home-button">
+                    Return to Home
+                </a>
+            </div>
+
+        </Authorized>
+    </AuthorizeView>
+
+</div>
+
+@code {
+    private string userName = "";
+    private string password = "";
+    private string errorLabel = "";
+
+    private async Task LoginAsync()
+    {
+        errorLabel = "";
+
+        try
+        {
+            await ((SimpleAuthProvider)AuthProvider).Login(userName, password);
+            NavMgr.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            errorLabel = $"Error: {e.Message}";
+        }
+    }
+}

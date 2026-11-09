@@ -1,0 +1,102 @@
+﻿
+@page "/create-post"
+@attribute [Authorize]
+@using ApiContracts
+@using DnpBlazorClient.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+
+@inject IPostService PostService
+@inject NavigationManager Navigation
+
+<PageTitle>Create Post - Fora</PageTitle>
+
+<div class="create-post-page">
+
+    <div class="create-post-heading">
+        <p class="page-label">FORA / CREATE</p>
+        <h1>Every idea starts somewhere.</h1>
+        <p>Share your perspective and start a conversation.</p>
+    </div>
+
+    <div class="create-post-card">
+
+        <div class="form-group">
+            <label for="post-title">POST TITLE</label>
+            <input id="post-title"
+                   @bind="title"
+                   placeholder="Give your conversation a title..." />
+        </div>
+
+        <div class="form-group">
+            <label for="post-body">YOUR THOUGHTS</label>
+            <textarea id="post-body"
+                      @bind="body"
+                      placeholder="What's on your mind?"
+                      rows="7"></textarea>
+        </div>
+
+        <div class="form-actions">
+            <a href="/posts" class="cancel-button">
+                Cancel
+            </a>
+
+            <button class="publish-button"
+                    @onclick="SubmitPost">
+                Publish Post
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> State { get; set; } = default!;
+
+    private string title = "";
+    private string body = "";
+    private int userId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+
+        if (claimsPrincipal.Identity is null ||
+            !claimsPrincipal.Identity.IsAuthenticated)
+        {
+            return;
+        }
+
+        // Retrieve the logged-in user's Id
+        string? userIdAsString = claimsPrincipal.FindFirst(
+            ClaimTypes.NameIdentifier
+        )?.Value;
+
+        if (int.TryParse(userIdAsString, out int loggedInUserId))
+        {
+            userId = loggedInUserId;
+        }
+    }
+
+    private async Task SubmitPost()
+    {
+        if (userId <= 0)
+        {
+            return;
+        }
+
+        CreatePostDto request = new CreatePostDto
+        {
+            Title = title,
+            Body = body,
+            UserId = userId
+        };
+
+        await PostService.AddPostAsync(request);
+
+        Navigation.NavigateTo("/posts");
+    }
+}

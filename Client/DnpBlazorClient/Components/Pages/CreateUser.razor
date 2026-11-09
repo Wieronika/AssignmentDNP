@@ -1,0 +1,78 @@
+﻿@page "/create-user"
+@using ApiContracts
+@using DnpBlazorClient.Services
+
+@inject IUserService UserService
+@inject NavigationManager Navigation
+
+<PageTitle>Join Fora</PageTitle>
+
+<div class="create-user-page">
+
+    <div class="create-user-heading">
+        <p class="page-label">FORA / JOIN THE COMMUNITY</p>
+
+        <h1>Your voice belongs here.</h1>
+
+        <p>
+            Create your account and become part of
+            conversations that matter.
+        </p>
+    </div>
+
+    <div class="create-user-card">
+
+        <div class="form-group">
+            <label for="username">USERNAME</label>
+
+            <input id="username"
+                   type="text"
+                   @bind="userName"
+                   placeholder="Choose your username"
+                   autocomplete="username" />
+        </div>
+
+        <div class="form-group">
+            <label for="password">PASSWORD</label>
+
+            <input id="password"
+                   type="password"
+                   @bind="password"
+                   placeholder="Create your password"
+                   autocomplete="new-password" />
+        </div>
+
+        <button class="create-account-button"
+                @onclick="SubmitUser">
+            Create Account
+        </button>
+
+        <div class="login-prompt">
+            <p>
+                Already part of Fora?
+                <a href="/login">Log in</a>
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    private string userName = "";
+    private string password = "";
+
+    private async Task SubmitUser()
+    {
+        CreateUserDto request = new CreateUserDto
+        {
+            UserName = userName,
+            Password = password
+        };
+
+        await UserService.AddUserAsync(request);
+
+        // after registration, redirect the user to log in
+        Navigation.NavigateTo("/login");
+    }
+}

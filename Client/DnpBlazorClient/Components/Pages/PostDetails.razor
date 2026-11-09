@@ -1,0 +1,209 @@
+﻿
+@page "/posts/{Id:int}"
+@using ApiContracts
+@using DnpBlazorClient.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+
+@inject IPostService PostService
+@inject ICommentService CommentService
+
+<PageTitle>Post Details - Fora</PageTitle>
+
+<div class="post-details-page">
+
+    <div class="page-heading">
+        <p class="page-label">FORA / CONVERSATION</p>
+        <h1>A space for meaningful ideas.</h1>
+        <p>Discover perspectives. Share your own.</p>
+    </div>
+
+    @if (post == null || comments == null)
+    {
+        <p class="loading-message">Loading conversation...</p>
+    }
+    else
+    {
+        <article class="post-card">
+
+            <div class="post-meta">
+                <div class="author-avatar">
+                    <span class="bi bi-person-fill"></span>
+                </div>
+
+                <div class="author-info">
+                    <strong>@post.UserName</strong>
+                    <span>POST AUTHOR</span>
+                </div>
+
+                <span class="post-category">DISCUSSION</span>
+            </div>
+
+            <div class="post-divider"></div>
+
+            <h2 class="post-title">@post.Title</h2>
+            <p class="post-body">@post.Body</p>
+
+            @* Show ownership information to the author  *@
+            <AuthorizeView>
+                <Authorized>
+                    @if (post.UserId == userId)
+                    {
+                        <div class="owner-badge">
+                            <span class="bi bi-check-circle-fill"></span>
+                            You are the author of this post.
+                        </div>
+                    }
+                </Authorized>
+            </AuthorizeView>
+
+        </article>
+
+        <section class="comments-section">
+
+            <div class="comments-heading">
+                <h3>The conversation</h3>
+                <span class="comments-count">
+                    @comments.Count() comments
+                </span>
+            </div>
+
+            @if (!comments.Any())
+            {
+                <div class="empty-comments">
+                    <span class="bi bi-chat-left-text"></span>
+                    <h4>No comments yet.</h4>
+                    <p>Be the first to share your perspective.</p>
+                </div>
+            }
+            else
+            {
+                @foreach (CommentDto comment in comments)
+                {
+                    <div class="comment-card">
+
+                        <div class="comment-author">
+                            <div class="comment-avatar">
+                                <span class="bi bi-person-fill"></span>
+                            </div>
+
+                            <strong>@comment.UserName</strong>
+                        </div>
+
+                        <p class="comment-body">@comment.Body</p>
+
+                    </div>
+                }
+            }
+
+        </section>
+
+        <AuthorizeView>
+            <Authorized>
+                <section class="add-comment-card">
+
+                    <div class="comment-form-heading">
+                        <p class="page-label">JOIN THE DISCUSSION</p>
+                        <h3>Add your perspective.</h3>
+                        <p>Have something to say? We'd love to hear it.</p>
+                    </div>
+
+                    <label for="comment-body">YOUR COMMENT</label>
+
+                    <textarea id="comment-body"
+                              @bind="commentBody"
+                              placeholder="Write a thoughtful comment..."
+                              rows="5"></textarea>
+
+                    <div class="comment-actions">
+                        <button class="submit-comment-button"
+                                @onclick="AddComment">
+                            Post Comment
+                        </button>
+                    </div>
+
+                </section>
+            </Authorized>
+
+            <NotAuthorized>
+                <div class="login-invitation">
+
+                    <div>
+                        <h3>Join the conversation.</h3>
+                        <p>
+                            Log in to share your thoughts
+                            and connect with the community.
+                        </p>
+                    </div>
+
+                    <a href="/login" class="login-button">
+                        Log in
+                    </a>
+
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [CascadingParameter]
+    public Task<AuthenticationState> State { get; set; } = default!;
+
+    private PostDto? post;
+    private IEnumerable<CommentDto>? comments;
+    private string commentBody = "";
+    private int userId;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        post = await PostService.GetPostAsync(Id);
+        comments = await CommentService.GetCommentsForPostAsync(Id);
+
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+
+        userId = 0;
+
+        if (claimsPrincipal.Identity is null ||
+            !claimsPrincipal.Identity.IsAuthenticated)
+        {
+            return;
+        }
+
+        // provider uses ClaimTypes.NameIdentifier.
+        string? userIdAsString = claimsPrincipal.FindFirst(
+            ClaimTypes.NameIdentifier
+        )?.Value;
+
+        if (int.TryParse(userIdAsString, out int loggedInUserId))
+        {
+            userId = loggedInUserId;
+        }
+    }
+
+    private async Task AddComment()
+    {
+        if (userId <= 0 || string.IsNullOrWhiteSpace(commentBody))
+        {
+            return;
+        }
+
+        CreateCommentDto request = new CreateCommentDto
+        {
+            Body = commentBody,
+
+            //Associate the comment with the logged-in user.
+            UserId = userId
+        };
+
+        await CommentService.AddCommentAsync(Id, request);
+
+        commentBody = "";
+        comments = await CommentService.GetCommentsForPostAsync(Id);
+    }
+}

@@ -1,0 +1,97 @@
+﻿
+@page "/"
+
+<PageTitle>Fora - Home</PageTitle>
+
+<div class="home-container">
+
+    <section class="hero">
+        <div class="hero-content">
+
+            <p class="hero-label">WELCOME TO FORA.</p>
+
+            <h1>Good conversations start here.</h1>
+
+            <p class="hero-description">
+                Discover new perspectives, share your thoughts,
+                and join the discussion.
+            </p>
+
+            <div class="hero-buttons">
+                <a class="explore-button" href="/posts">
+                    Explore Posts
+                </a>
+
+                <a class="create-button" href="/create-post">
+                    Create Post
+                </a>
+            </div>
+
+        </div>
+
+        <div class="hero-image">
+            <img src="/images/forum-pic.webp"
+                 alt="People sharing ideas and collaborating" />
+        </div>
+    </section>
+
+    <AuthorizeView>
+        <NotAuthorized>
+            <section class="join-banner">
+                <div class="join-content">
+                    <p class="join-label">YOUR VOICE MATTERS</p>
+
+                    <h2>Have something on your mind?</h2>
+
+                    <p>
+                        Share your story, express your opinion,
+                        and start a conversation worth having.
+                    </p>
+                </div>
+
+                <a class="join-button" href="/login">
+                    Log in to share →
+                </a>
+            </section>
+        </NotAuthorized>
+
+        <Authorized>
+            <div class="welcome-message">
+                <h2>Welcome back, @context.User.Identity?.Name!</h2>
+                <p>Ready to share something with the community?</p>
+                <a href="/create-post">Create a post →</a>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+
+    <h2 class="section-heading">Your space to explore.</h2>
+
+    <div class="feature-grid">
+
+        <a class="feature-card" href="/posts">
+            <span class="feature-icon">💬</span>
+            <h3>Explore</h3>
+            <p>Discover interesting discussions.</p>
+        </a>
+
+        <a class="feature-card" href="/create-post">
+            <span class="feature-icon">✏️</span>
+            <h3>Create</h3>
+            <p>Share your thoughts and ideas.</p>
+        </a>
+
+        <a class="feature-card" href="/create-user">
+            <span class="feature-icon">✨</span>
+            <h3>Join</h3>
+            <p>Become part of the community.</p>
+        </a>
+
+        <a class="feature-card" href="/posts">
+            <span class="feature-icon">🧡</span>
+            <h3>Connect</h3>
+            <p>Join conversations that matter.</p>
+        </a>
+
+    </div>
+
+</div>
