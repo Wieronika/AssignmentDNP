@@ -1,6 +1,8 @@
-﻿using ApiContracts;
+﻿
+using ApiContracts;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -15,7 +17,7 @@ public class UsersController : ControllerBase
     {
         this.userRepo = userRepo;
     }
-    
+
     [HttpGet("{id:int}")]
     public async Task<IResult> GetUser([FromRoute] int id)
     {
@@ -35,33 +37,30 @@ public class UsersController : ControllerBase
         {
             return Results.NotFound($"User with ID {id} not found.");
         }
-
     }
 
-
     [HttpGet]
-    public Task<IResult> GetUsers([FromQuery] string? userName)
+    public async Task<IResult> GetUsers([FromQuery] string? userName)
     {
         IQueryable<User> users = userRepo.GetMany();
 
         if (!string.IsNullOrWhiteSpace(userName))
         {
+            string search = userName.ToLower();
+
             users = users.Where(u =>
-                u.UserName.Contains(
-                    userName,
-                    StringComparison.OrdinalIgnoreCase));
+                u.UserName.ToLower().Contains(search));
         }
 
-        List<UserDto> dtos = users.Select(user => new UserDto
+        List<UserDto> dtos = await users.Select(user => new UserDto
         {
             Id = user.Id,
             UserName = user.UserName
-        }).ToList();
+        }).ToListAsync();
 
-        return Task.FromResult<IResult>(Results.Ok(dtos));
+        return Results.Ok(dtos);
     }
 
-    //Here i return userDto and not just User, so the password isn't included in the response
     [HttpPost]
     public async Task<IResult> CreateUser([FromBody] CreateUserDto request)
     {
@@ -77,8 +76,7 @@ public class UsersController : ControllerBase
 
         return Results.Created($"/users/{created.Id}", dto);
     }
-    
-    //With this method we find user by ID, update their info and save changes
+
     [HttpPatch("{id:int}")]
     public async Task<IResult> UpdateUser(
         [FromRoute] int id,
@@ -95,12 +93,10 @@ public class UsersController : ControllerBase
 
             return Results.NoContent();
         }
-       
         catch (InvalidOperationException)
         {
             return Results.NotFound($"User with ID {id} not found.");
         }
-
     }
 
     [HttpDelete("{id:int}")]
@@ -112,13 +108,9 @@ public class UsersController : ControllerBase
 
             return Results.NoContent();
         }
-        
         catch (InvalidOperationException)
         {
             return Results.NotFound($"User with ID {id} not found.");
         }
-
     }
-
-    
 }

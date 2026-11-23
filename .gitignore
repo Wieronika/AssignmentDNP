@@ -4,6 +4,13 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 .idea/
+
 users.json
 posts.json
 comments.json
+
+*.db-shm
+*.db-wal
+
+*.user
+*.suo

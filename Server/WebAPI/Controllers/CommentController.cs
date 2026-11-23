@@ -2,6 +2,7 @@
 using ApiContracts;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -24,46 +25,40 @@ public class CommentsController : ControllerBase
         this.userRepo = userRepo;
     }
 
-
     [HttpGet("{id:int}")]
     public async Task<IResult> GetComment([FromRoute] int id)
     {
-        try
-        {
-            Comment comment = await commentRepo.GetSingleAsync(id);
-            User user = await userRepo.GetSingleAsync(comment.UserId);
+        Comment? comment = await commentRepo.GetMany()
+            .Include(c => c.User)
+            .FirstOrDefaultAsync(c => c.Id == id);
 
-            CommentDto dto = new CommentDto
-            {
-                Id = comment.Id,
-                Body = comment.Body,
-                UserId = comment.UserId,
-                UserName = user.UserName,
-                PostId = comment.PostId
-            };
-
-            return Results.Ok(dto);
-        }
-        catch (InvalidOperationException)
+        if (comment == null)
         {
-            return Results.NotFound("Comment or author not found.");
+            return Results.NotFound($"Comment with ID {id} not found.");
         }
+
+        CommentDto dto = new CommentDto
+        {
+            Id = comment.Id,
+            Body = comment.Body,
+            UserId = comment.UserId,
+            UserName = comment.User.UserName,
+            PostId = comment.PostId
+        };
+
+        return Results.Ok(dto);
     }
-    
+
     [HttpGet("/posts/{postId:int}/comments")]
     public async Task<IResult> GetCommentsForPost(
         [FromRoute] int postId)
     {
-        try
-        {
-            await postRepo.GetSingleAsync(postId);
-        }
-        catch (InvalidOperationException)
+        if (!await postRepo.GetMany().AnyAsync(p => p.Id == postId))
         {
             return Results.NotFound($"Post with ID {postId} not found.");
         }
 
-        List<CommentDto> dtos = commentRepo.GetMany()
+        List<CommentDto> dtos = await commentRepo.GetMany()
             .Where(comment => comment.PostId == postId)
             .Select(comment => new CommentDto
             {
@@ -71,11 +66,9 @@ public class CommentsController : ControllerBase
                 Body = comment.Body,
                 UserId = comment.UserId,
                 PostId = comment.PostId,
-                UserName = userRepo.GetMany()
-                    .Where(user => user.Id == comment.UserId)
-                    .Select(user => user.UserName)
-                    .FirstOrDefault() ?? ""
-            }).ToList();
+                UserName = comment.User.UserName
+            })
+            .ToListAsync();
 
         return Results.Ok(dtos);
     }
@@ -123,7 +116,7 @@ public class CommentsController : ControllerBase
 
         return Results.Created($"/comments/{created.Id}", dto);
     }
-    
+
     [HttpPatch("{id:int}")]
     public async Task<IResult> UpdateComment(
         [FromRoute] int id,
@@ -144,7 +137,7 @@ public class CommentsController : ControllerBase
             return Results.NotFound($"Comment with ID {id} not found.");
         }
     }
-    
+
     [HttpDelete("{id:int}")]
     public async Task<IResult> DeleteComment([FromRoute] int id)
     {
@@ -159,43 +152,34 @@ public class CommentsController : ControllerBase
             return Results.NotFound($"Comment with ID {id} not found.");
         }
     }
-    
-    
     [HttpGet]
-    public Task<IResult> GetComments(
+    public async Task<IResult> GetComments(
         [FromQuery] int? userId,
         [FromQuery] int? postId)
     {
         IQueryable<Comment> comments = commentRepo.GetMany();
 
-        // by user ID
         if (userId != null)
         {
             comments = comments.Where(c => c.UserId == userId);
         }
 
-        // by post ID
         if (postId != null)
         {
             comments = comments.Where(c => c.PostId == postId);
         }
 
-        List<User> users = userRepo.GetMany().ToList();
-
-        List<CommentDto> dtos = comments.Select(comment =>
-            new CommentDto
+        List<CommentDto> dtos = await comments
+            .Select(comment => new CommentDto
             {
                 Id = comment.Id,
                 Body = comment.Body,
                 UserId = comment.UserId,
                 PostId = comment.PostId,
-                UserName = users
-                    .Where(u => u.Id == comment.UserId)
-                    .Select(u => u.UserName)
-                    .FirstOrDefault() ?? ""
-            }).ToList();
+                UserName = comment.User.UserName
+            })
+            .ToListAsync();
 
-        return Task.FromResult<IResult>(Results.Ok(dtos));
-    }
-
+        return Results.Ok(dtos);
+    } 
 }

@@ -1,28 +1,27 @@
-using FileRepositories;
+using EfcRepositories;
 using RepositoryContracts;
 using WebAPI.Middleware;
+using AppContext = EfcRepositories.AppContext;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddTransient<
-    GlobalExceptionHandlerMiddleware>();
 
-// Add services to the container.
+builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
+
 builder.Services.AddControllers();
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-// Register repositories
-builder.Services.AddScoped<IPostRepository, PostFileRepository>();
-builder.Services.AddScoped<IUserRepository, UserFileRepository>();
-builder.Services.AddScoped<ICommentRepository, CommentFileRepository>();
+builder.Services.AddScoped<IPostRepository, EfcPostRepository>();
+builder.Services.AddScoped<IUserRepository, EfcUserRepository>();
+builder.Services.AddScoped<ICommentRepository, EfcCommentRepository>();
+builder.Services.AddDbContext<AppContext>();
 
 var app = builder.Build();
+
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.MapControllers();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

@@ -1,4 +1,4 @@
-@WebAPI_HostAddress = http://localhost:5120
+@WebAPI_HostAddress = https://localhost:7131
 
 ### Test WeatherForecast
 GET {{WebAPI_HostAddress}}/weatherforecast/
@@ -312,5 +312,6 @@ GET {{WebAPI_HostAddress}}/comments?userId=12345
 GET {{WebAPI_HostAddress}}/test-error
 
 
+### Assignment 7 TESTS
 
 

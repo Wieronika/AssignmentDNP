@@ -2,6 +2,7 @@
 using ApiContracts;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -20,71 +21,63 @@ public class PostsController : ControllerBase
         this.postRepo = postRepo;
         this.userRepo = userRepo;
     }
-    
+
     [HttpGet("{id:int}")]
     public async Task<IResult> GetPost([FromRoute] int id)
     {
-        try
+        Post? post = await postRepo.GetMany()
+            .Include(p => p.User)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (post == null)
         {
-            Post post = await postRepo.GetSingleAsync(id);
-            User user = await userRepo.GetSingleAsync(post.UserId);
-
-            PostDto dto = new PostDto
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Body = post.Body,
-                UserId = post.UserId,
-                UserName = user.UserName
-            };
-
-            return Results.Ok(dto);
-        }
-        catch (InvalidOperationException)
-        {
-            return Results.NotFound("Post or author not found.");
-        }
-    }
-    
-
-    [HttpGet]
-    public Task<IResult> GetPosts(
-        [FromQuery] int? userId,
-        [FromQuery] string? title)
-    {
-        IQueryable<Post> posts = postRepo.GetMany();
-
-        //here I filter posts by author ID
-        if (userId != null)
-        {
-            posts = posts.Where(p => p.UserId == userId);
+            return Results.NotFound($"Post with ID {id} not found.");
         }
 
-        //and here I filter posts by title
-        if (!string.IsNullOrWhiteSpace(title))
-        {
-            posts = posts.Where(p =>
-                p.Title.Contains(
-                    title,
-                    StringComparison.OrdinalIgnoreCase));
-        }
-
-        List<PostDto> dtos = posts.Select(post => new PostDto
+        PostDto dto = new PostDto
         {
             Id = post.Id,
             Title = post.Title,
             Body = post.Body,
             UserId = post.UserId,
-            UserName = userRepo.GetMany()
-                .Where(user => user.Id == post.UserId)
-                .Select(user => user.UserName)
-                .FirstOrDefault() ?? ""
-        }).ToList();
+            UserName = post.User.UserName
+        };
 
-        return Task.FromResult<IResult>(Results.Ok(dtos));
+        return Results.Ok(dto);
     }
 
-    
+    [HttpGet]
+    public async Task<IResult> GetPosts(
+        [FromQuery] int? userId,
+        [FromQuery] string? title)
+    {
+        IQueryable<Post> posts = postRepo.GetMany();
+
+        if (userId != null)
+        {
+            posts = posts.Where(p => p.UserId == userId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            string search = title.ToLower();
+
+            posts = posts.Where(p =>
+                p.Title.ToLower().Contains(search));
+        }
+
+        List<PostDto> dtos = await posts.Select(post => new PostDto
+        {
+            Id = post.Id,
+            Title = post.Title,
+            Body = post.Body,
+            UserId = post.UserId,
+            UserName = post.User.UserName
+        }).ToListAsync();
+
+        return Results.Ok(dtos);
+    }
+
     [HttpPost]
     public async Task<IResult> CreatePost(
         [FromBody] CreatePostDto request)
@@ -118,7 +111,7 @@ public class PostsController : ControllerBase
 
         return Results.Created($"/posts/{created.Id}", dto);
     }
-    
+
     [HttpPatch("{id:int}")]
     public async Task<IResult> UpdatePost(
         [FromRoute] int id,
@@ -140,7 +133,7 @@ public class PostsController : ControllerBase
             return Results.NotFound($"Post with ID {id} not found.");
         }
     }
-    
+
     [HttpDelete("{id:int}")]
     public async Task<IResult> DeletePost([FromRoute] int id)
     {
